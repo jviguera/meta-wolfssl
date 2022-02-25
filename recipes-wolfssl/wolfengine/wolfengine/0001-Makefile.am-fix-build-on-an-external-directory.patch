@@ -1,0 +1,28 @@
+From: Javier Viguera <javier.viguera@digi.com>
+Date: Mon, 28 Feb 2022 13:23:53 +0100
+Subject: [PATCH] Makefile.am: fix build on an external directory
+
+Doing external build of the repository fails due to not finding some
+header files:
+
+fatal error: wolfengine/we_internal.h: No such file or directory
+
+This is what happens for example in Yocto, where the packages are not
+build in the source tree itself but in an external build directory.
+
+Signed-off-by: Javier Viguera <javier.viguera@digi.com>
+---
+ Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index d7001ba6df49..8e0cd0924ef6 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -39,4 +39,6 @@ AM_DISTCHECK_CONFIGURE_FLAGS=CPPFLAGS="-I@abs_top_srcdir@/include \
+                                          @OPENSSL_INCLUDES@" \
+                              LDFLAGS="@OPENSSL_LDFLAGS@"
+ 
++AM_CPPFLAGS = -I$(top_srcdir)/include
++
+ EXTRA_DIST+= README.md
